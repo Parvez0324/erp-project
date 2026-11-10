@@ -68,7 +68,7 @@ if (!function_exists('account_type')) {
 }
 
 if (!function_exists('accountCodeGenerate')) {
-    function accountCodeGenerate($type, $parent_id = null, $id)
+    function accountCodeGenerate($type, $parent_id = null, $id = null)
     {
 
         if ($parent_id == null) {
