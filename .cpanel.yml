@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/qfh9zrytfhm0/public_html/erp.nabitspl.com/
+    - /bin/rsync -av --exclude='.git*' --exclude='.env' --exclude='.env.*' ./ $DEPLOYPATH
