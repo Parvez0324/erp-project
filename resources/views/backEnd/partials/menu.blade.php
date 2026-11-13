@@ -1,420 +1,319 @@
-@php
-    Illuminate\Support\Facades\Cache::rememberForever('showrooms', function() {
-       return \Modules\Inventory\Entities\ShowRoom::where('status', 1)->get();
-    });
-    Illuminate\Support\Facades\Cache::rememberForever('languages', function() {
-       return \Modules\Localization\Entities\Language::where('status', 1)->get();
-    });
-    Illuminate\Support\Facades\Cache::rememberForever('date_format', function() {
-       return \Modules\Setting\Model\DateFormat::where('status', 1)->get();
-    });
-@endphp
-<div class="container-fluid no-gutters">
-    <div class="row">
-        <div class="col-lg-12 p-0">
-            <div class="header_iner d-flex justify-content-between align-items-center">
-                @if (!request()->is('pos/pos-order-products'))
-                    <div class="small_logo_crm d-lg-none">
-                        <a href="{{url('/login')}}">
-                            <img src="{{ $setting->logo}}" alt=""></a>
-                    </div>
-                    <div id="sidebarCollapse" class="sidebar_icon  d-lg-none">
-                        <i class="ti-menu"></i>
-                    </div>
-                    <div class="collaspe_icon open_miniSide">
-                        <i class="ti-menu"></i>
-                    </div>
-                @endif
-                <div class="serach_field-area ml-40">
-                    @if (!request()->is('pos/pos-order-products') and auth()->user()->role->type != 'normal_user')
-                        <div class="search_inner search_menu_suggestion">
-                            <form action="#">
-                                <div class="search_field">
-                                    <input type="text" class="search_menu" placeholder="{{__('common.Search')}}">
-                                </div>
-                                <button><i class="ti-search"></i></button>
-                            </form>
-                            <div id="livesearch"></div>
-                        </div>
-                    @endif
+<!-- ============================================================
+     KAN ERP — HEADER (Exact Reference Alignment & Top-Notch UX)
+     Left: Breadcrumb (Home > Workspace > Dashboard)
+     Center: Company Dropdown, Location Dropdown, Search Bar
+     Right: Notification Center (Bell with Badge 3), Help, Profile Avatar
+     Zero Overflow in both Full & Collapsed Sidebar views
+     ============================================================ -->
+<header class="kan-header">
+    <!-- LEFT: Breadcrumb (Matching Reference Image) -->
+    <div class="kan-header-left">
+        <a href="{{ route('home') }}" class="kan-breadcrumb-home" title="Home">
+            <i class="bi bi-house-door"></i>
+        </a>
+        <i class="bi bi-chevron-right kan-breadcrumb-sep"></i>
+        <span class="kan-breadcrumb-item">Workspace</span>
+        <i class="bi bi-chevron-right kan-breadcrumb-sep"></i>
+        <span class="kan-breadcrumb-item active">Dashboard</span>
+    </div>
+
+    <!-- CENTER: Company, Location & Search (Matching Reference Image) -->
+    <div class="kan-header-center">
+        <!-- Company Selector Dropdown -->
+        <div class="kan-dropdown-wrap" id="kanCompanyWrap">
+            <button type="button" class="kan-pill-dropdown kan-company-pill" id="companyDropdownBtn" title="Select Organization">
+                <i class="bi bi-building kan-pill-icon"></i>
+                <span class="kan-pill-text">KAN Industries Pvt. Ltd.</span>
+                <i class="bi bi-chevron-down kan-pill-arrow"></i>
+            </button>
+            <div class="kan-popover-menu kan-org-menu" id="companyDropdownMenu">
+                <div class="kan-popover-header">
+                    <span class="kan-popover-title">Select Organization</span>
+                    <span class="kan-popover-sub">3 entities available</span>
                 </div>
-                <div class="header_middle d-none d-md-block">
-                    <div class="select_style d-flex">
-                        @if (auth()->user()->role->type == "system_user")
-                            <select name="#" class="nice_Select select_showroom bgLess mb-0 ">
-                                @foreach (Illuminate\Support\Facades\Cache::get('showrooms') as $key => $showroom)
-                                    <option value="{{ $showroom->id }}"
-                                            @if ($showroom->id == session()->get('showroom_id')) selected @endif>{{ $showroom->name }}</option>
-                                @endforeach
-                            </select>
-                        @elseif (auth()->user()->role->type == "regular_user")
-                            <select name="#" class="nice_Select select_showroom bgLess mb-0 ">
-                                @if (showroomName() != null)
-                                    <option value="" selected>{{ showroomName() }}</option>
-                                @else
-                                    <option value="" selected>{{ __('common.Login Again') }}</option>
-                                @endif
-                            </select>
-                        @endif
-                        @if(permissionCheck('language.change'))
-                            <div class="border_1px"></div>
-                            @php
-                                if(session()->has('locale')){
-                                    $locale = session()->get('locale');
-                                }
-                                else{
-                                    session()->put('locale', app('general_setting')->language_name);
-                                    $locale = session()->get('locale');
-                                }
-                            @endphp
-                            <select name="code" id="language_code" class="nice_Select bgLess mb-0"
-                                    onchange="change_Language()">
-                                @foreach (Illuminate\Support\Facades\Cache::get('languages') as $key => $language)
-                                    <option value="{{ $language->code }}"
-                                            @if ($locale == $language->code) selected @endif>{{ $language->name }}</option>
-                                @endforeach
-                            </select>
-                            @endif
+                <div class="kan-popover-divider"></div>
+                <div class="kan-org-item active">
+                    <div class="kan-org-avatar">KI</div>
+                    <div class="kan-org-details">
+                        <span class="kan-org-name">KAN Industries Pvt. Ltd.</span>
+                        <span class="kan-org-role">Manufacturing &bull; Mumbai</span>
                     </div>
-
+                    <i class="bi bi-check2 kan-org-check"></i>
                 </div>
-                <div class="header_middle d-none d-md-block">
-
-                </div>
-                <div class="header_right d-flex justify-content-between align-items-center">
-                    @if (auth()->user()->role->type != "normal_user")
-                        <div class="header_notification_warp d-flex align-items-center">
-                            <ul>
-                                <li>
-                                    <a class="gredient_hover" href="{{ route('cashbook.index') }}">
-                                        <i class="ti-agenda"></i>
-                                    </a>
-                                </li>
-                                <li class="notification_warp_pop">
-                                    <a class="popUP_clicker gredient_hover" href="#">
-                                        <i class="ti-plus"></i>
-                                    </a>
-                                    <div class="menu_popUp_list_wrapper">
-                                        <!-- popUp_single_wrap  -->
-                                        <div class="popUp_single_wrap">
-                                            @if (permissionCheck('sale.create'))
-                                                <div class="popup_single_item">
-                                                    <div class="main-title2 mb_10">
-                                                        <h4 class="mb_15">{{ __('sale.Sales') }}</h4>
-                                                    </div>
-                                                    <ul>
-                                                        <li><a href="{{ route('sale.create') }}"> <i
-                                                                    class="ti-plus"></i> {{ __('sale.Add Sale') }}</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            @endif
-
-                                            @if (permissionCheck('add_contact.store'))
-                                                <div class="popup_single_item">
-                                                    <div class="main-title2 mb_10">
-                                                        <h4 class="mb_15">{{ __('contact.Contact') }}</h4>
-                                                    </div>
-                                                    <ul>
-                                                        <li><a href="{{ route('add_contact.store') }}"> <i
-                                                                    class="ti-plus"></i>{{ __('contact.Add Contact') }}
-                                                            </a></li>
-                                                    </ul>
-                                                </div>
-                                            @endif
-
-                                            @if (permissionCheck('purchase_order.recieve.index'))
-                                                <div class="popup_single_item">
-                                                    <div class="main-title2 mb_10">
-                                                        <h4 class="mb_15">{{ __('product.Products') }}</h4>
-                                                    </div>
-                                                    <ul>
-                                                        <li><a href="{{ route('purchase_order.recieve.index') }}"> <i
-                                                                    class="ti-plus"></i> {{ __('common.Recieve Product') }}
-                                                            </a></li>
-                                                    </ul>
-                                                </div>
-                                            @endif
-
-
-                                        </div>
-                                        <!-- popUp_single_wrap  -->
-                                        <div class="popUp_single_wrap">
-                                            @if (permissionCheck('purchase_order.create'))
-                                                <div class="popup_single_item">
-                                                    <div class="main-title2 mb_10">
-                                                        <h4 class="mb_15">{{ __('purchase.Purchase') }}</h4>
-                                                    </div>
-                                                    <ul>
-                                                        <li><a href="{{ route('purchase_order.create') }}"> <i
-                                                                    class="ti-plus"></i> {{ __('purchase.Add Purchase') }}
-                                                            </a></li>
-                                                    </ul>
-                                                </div>
-                                            @endif
-
-                                            @if (permissionCheck('transfer_showroom.create'))
-                                                <div class="popup_single_item">
-                                                    <div class="main-title2 mb_10">
-                                                        <h4 class="mb_15">{{ __('account.Money Transfer') }}</h4>
-                                                    </div>
-                                                    <ul>
-                                                        <li><a href="{{ route('transfer_showroom.create') }}"> <i
-                                                                    class="ti-plus"></i>{{ __('account.Add Money Transfer') }}
-                                                            </a></li>
-                                                    </ul>
-                                                </div>
-                                            @endif
-
-                                            @if (permissionCheck('staffs.create'))
-                                                <div class="popup_single_item">
-                                                    <div class="main-title2 mb_10">
-                                                        <h4 class="mb_15">{{ __('common.Staff') }}</h4>
-                                                    </div>
-                                                    <ul>
-                                                        <li><a href="{{ route('staffs.create') }}"> <i
-                                                                    class="ti-plus"></i> {{ __('common.Add Staff') }}
-                                                            </a></li>
-                                                    </ul>
-                                                </div>
-                                            @endif
-
-
-                                        </div>
-                                        <!-- popUp_single_wrap  -->
-                                        <div class="popUp_single_wrap">
-
-
-                                            @if (permissionCheck('introPrefix.create'))
-                                                <div class="popup_single_item">
-                                                    <div class="main-title2 mb_10">
-                                                        <h4 class="mb_15">{{ __('common.Intro Prefix') }}</h4>
-                                                    </div>
-                                                    <ul>
-                                                        <li><a href="{{ route('introPrefix.index') }}"> <i
-                                                                    class="ti-plus"></i>
-                                                                {{ __('common.Add Intro Prefix') }}</a></li>
-                                                    </ul>
-                                                </div>
-                                            @endif
-
-                                            @if (permissionCheck('tax.create'))
-                                                <div class="popup_single_item">
-                                                    <div class="main-title2 mb_10">
-                                                        <h4 class="mb_15">{{ __('account.Tax') }}</h4>
-                                                    </div>
-                                                    <ul>
-                                                        <li><a href="{{ route('tax.index') }}"> <i
-                                                                    class="ti-plus"></i> {{ __('account.Add Tax') }}</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            @endif
-
-                                        </div>
-                                        <!-- popUp_single_wrap  -->
-                                        <div class="popUp_single_wrap">
-                                            @if (permissionCheck('printer.create'))
-                                                <div class="popup_single_item">
-                                                    <div class="main-title2 mb_10">
-                                                        <h4 class="mb_15">{{ __('common.Printer') }}</h4>
-                                                    </div>
-                                                    <ul>
-                                                        <li><a href="{{ route('printer.index') }}"> <i
-                                                                    class="ti-plus"></i> {{ __('common.Add Printer') }}
-                                                            </a></li>
-                                                    </ul>
-                                                </div>
-                                            @endif
-
-                                            @if (permissionCheck('vouchers.create'))
-                                                <div class="popup_single_item">
-                                                    <div class="main-title2 mb_10">
-                                                        <h4 class="mb_15">{{ __('common.Payments') }}</h4>
-                                                    </div>
-                                                    <ul>
-                                                        <li><a href="{{ route('vouchers.create') }}"> <i
-                                                                    class="ti-plus"></i>{{ __('account.Add Payments') }}
-                                                            </a></li>
-                                                    </ul>
-                                                </div>
-                                            @endif
-
-                                            @if (permissionCheck('voucher_recieve.create'))
-                                                <div class="popup_single_item">
-                                                    <div class="main-title2 mb_10">
-                                                        <h4 class="mb_15">{{ __('common.Recieve') }}</h4>
-                                                    </div>
-                                                    <ul>
-                                                        <li>
-                                                            <a href="{{ route('voucher_recieve.create') }}"> <i
-                                                                    class="ti-plus"></i> {{ __('common.Add Recieve') }}
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            @endif
-
-                                        </div>
-                                    </div>
-                                </li>
-
-                                <li class="scroll_notification_list">
-                                    <a class="pulse theme_color bell_notification_clicker" href="#" >
-                                        <!-- bell   -->
-                                        <i class="fa fa-bell"></i>
-
-                                        <!--/ bell   -->
-                                        <span class="notification_count notification_count_text">{{count($notifications)}}  </span>
-                                        <span class="notification_count_pulse {{count($notifications) > 0 ? 'pulse-ring' : ''}}"></span>
-                                    </a>
-                                    <!-- Menu_NOtification_Wrap  -->
-                                    <div class="Menu_NOtification_Wrap">
-                                        <div class="notification_Header">
-                                            <h4>{{__('common.Notifications')}}</h4>
-                                        </div>
-                                        <div class="Notification_body">
-
-                                            @if (app('business_settings')->where('type','system_notification')->where('status',1)->first())
-                                                @foreach ($notifications as $key => $notification)
-
-                                                    <div class="single_notify d-flex align-items-center">
-
-                                                        <div class="notify_content">
-                                                            <a href="{{$notification->url}}"
-                                                               onclick="notification_remove({{$notification->id}},'{{$notification->url}}')">
-                                                                <h5>{{$notification->type}} </h5></a>
-                                                            <p >{{$notification->data}}</p>
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                            @endif
-
-                                        </div>
-                                        <div class="nofity_footer">
-                                            <div class="submit_button text-center pt_20">
-                                                <a href="{{route('all_notifications')}}"
-                                                   class="primary-btn radius_30px text_white  fix-gr-bg">{{__('product.See More')}}</a>
-                                                @if(count($notifications))
-                                                    <span class="primary-btn radius_30px text_white notification_icon fix-gr-bg">{{__('common.Mark as seen')}}</span>
-                                                    @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--/ Menu_NOtification_Wrap  -->
-                                </li>
-                            </ul>
-                        </div>
-                    @endif
-
-                    <div class="profile_info">
-                        <img
-                            src="{{asset(Auth::user()->avatar != null ? Auth::user()->avatar : "public/img/profile.jpg")}}"
-                            alt="#">
-                        <div class="profile_info_iner">
-                            <p>{{__('common.Welcome')}} {{ Auth::user()->role->name }}!</p>
-                            <h5>{{ Auth::user()->name }}</h5>
-                            <div class="profile_info_details">
-                                @if(permissionCheck('company_information_update'))
-                                    <a href="{{route('company_info')}}">{{ __('common.Company Info') }} <i
-                                            class="ti-user"></i></a>
-                                @endif
-                                @if(Auth::user()->staff)
-                                    <a href="{{ route('profile_view') }}">{{ __('common.Profile') }} <i
-                                            class="ti-settings"></i></a>
-                                @elseif(Auth::user()->contact)
-                                    <a href="{{ route('contact.profile') }}">{{ __('common.Profile') }} <i
-                                            class="ti-settings"></i></a>
-                                @endif
-
-                                    <a href="{{ route('change_password') }}">{{ __('common.Change Password') }} <i
-                                            class="ti-key"></i></a>
-
-                                <a href="{{ route('logout') }}"
-                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    {{ __('Logout') }}
-                                    <i class="ti-shift-left"></i>
-                                </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                    @csrf
-                                </form>
-                            </div>
-                        </div>
+                <div class="kan-org-item">
+                    <div class="kan-org-avatar bg-indigo">KL</div>
+                    <div class="kan-org-details">
+                        <span class="kan-org-name">KAN Logistics Pvt. Ltd.</span>
+                        <span class="kan-org-role">Supply Chain &bull; Delhi</span>
                     </div>
+                </div>
+                <div class="kan-org-item">
+                    <div class="kan-org-avatar bg-teal">KT</div>
+                    <div class="kan-org-details">
+                        <span class="kan-org-name">KAN Tech Solutions</span>
+                        <span class="kan-org-role">Services &bull; Bengaluru</span>
+                    </div>
+                </div>
+                <div class="kan-popover-divider"></div>
+                <a href="javascript:void(0)" class="kan-popover-footer-link">
+                    <i class="bi bi-gear-wide"></i> Manage Organizations &rarr;
+                </a>
+            </div>
+        </div>
+
+        <!-- Location Selector Dropdown -->
+        <div class="kan-dropdown-wrap" id="kanLocationWrap">
+            <button type="button" class="kan-pill-dropdown kan-location-pill" id="locationDropdownBtn" title="Select Location">
+                <i class="bi bi-geo-alt kan-pill-icon"></i>
+                <span class="kan-pill-text">Mumbai</span>
+                <i class="bi bi-chevron-down kan-pill-arrow"></i>
+            </button>
+            <div class="kan-popover-menu kan-loc-menu" id="locationDropdownMenu">
+                <div class="kan-popover-header">
+                    <span class="kan-popover-title">Operating Location</span>
+                </div>
+                <div class="kan-popover-divider"></div>
+                <div class="kan-loc-item active">
+                    <i class="bi bi-geo-alt-fill text-blue"></i>
+                    <span>Mumbai (Headquarters)</span>
+                    <i class="bi bi-check2 kan-org-check"></i>
+                </div>
+                <div class="kan-loc-item">
+                    <i class="bi bi-geo-alt"></i>
+                    <span>Delhi Central Hub</span>
+                </div>
+                <div class="kan-loc-item">
+                    <i class="bi bi-geo-alt"></i>
+                    <span>Bengaluru Branch</span>
+                </div>
+                <div class="kan-loc-item">
+                    <i class="bi bi-geo-alt"></i>
+                    <span>Dubai Global Depot</span>
                 </div>
             </div>
         </div>
+
+        <!-- Search Bar -->
+        <div class="kan-header-search" id="serching">
+            <i class="bi bi-search kan-search-icon"></i>
+            <input type="text" 
+                   class="kan-search-input search_menu" 
+                   id="kanSearchInput" 
+                   placeholder="Search anything..." 
+                   autocomplete="off">
+            <div id="livesearch" class="kan-livesearch-box"></div>
+        </div>
     </div>
-</div>
-@push('scripts')
-    <script type="text/javascript">
-        function change_Language() {
-            var code = $('#language_code').val();
-            $.post('{{ route('language.change') }}', {_token: '{{ csrf_token() }}', code: code}, function (data) {
 
-                if (data.success) {
-                    window.location.reload(true);
-                    toastr.success(data.success);
-                } else {
-                    toastr.error(data.error);
+    <!-- RIGHT: Notification, Help & User Avatar (Matching Reference Image) -->
+    <div class="kan-header-right">
+        <!-- Notification Bell with Red Badge 3 & Interactive Popover -->
+        <div class="kan-dropdown-wrap" id="kanNotifWrap">
+            <button type="button" class="kan-icon-btn kan-notif-btn" id="notifBellBtn" title="Notifications">
+                <i class="bi bi-bell"></i>
+                <span class="kan-notif-badge">
+                    <span class="kan-notif-ping"></span>
+                    3
+                </span>
+            </button>
+            <div class="kan-popover-menu kan-notif-menu" id="notifMenu">
+                <div class="kan-notif-header">
+                    <div>
+                        <span class="kan-notif-title">Notifications</span>
+                        <span class="kan-notif-count-badge">3 unread</span>
+                    </div>
+                    <a href="javascript:void(0)" class="kan-notif-mark-read">Mark all read</a>
+                </div>
+                <div class="kan-popover-divider"></div>
+                <div class="kan-notif-list">
+                    <div class="kan-notif-item unread">
+                        <div class="kan-notif-icon-box bg-red"><i class="bi bi-exclamation-octagon-fill"></i></div>
+                        <div class="kan-notif-content">
+                            <p class="kan-notif-msg"><strong>12 Invoices Overdue</strong> totalling ₹2.1L require follow-up.</p>
+                            <span class="kan-notif-time"><i class="bi bi-clock"></i> 12m ago</span>
+                        </div>
+                    </div>
+                    <div class="kan-notif-item unread">
+                        <div class="kan-notif-icon-box bg-blue"><i class="bi bi-cart-check-fill"></i></div>
+                        <div class="kan-notif-content">
+                            <p class="kan-notif-msg"><strong>8 Purchase Orders</strong> are awaiting approval.</p>
+                            <span class="kan-notif-time"><i class="bi bi-clock"></i> 45m ago</span>
+                        </div>
+                    </div>
+                    <div class="kan-notif-item unread">
+                        <div class="kan-notif-icon-box bg-amber"><i class="bi bi-box-seam-fill"></i></div>
+                        <div class="kan-notif-content">
+                            <p class="kan-notif-msg"><strong>24 SKUs</strong> have fallen below safety level.</p>
+                            <span class="kan-notif-time"><i class="bi bi-clock"></i> 2h ago</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="kan-popover-divider"></div>
+                <a href="javascript:void(0)" class="kan-notif-footer-link">View all alerts in Action Center &rarr;</a>
+            </div>
+        </div>
+
+        <!-- Help Icon Button -->
+        <button type="button" class="kan-icon-btn" id="kanHelpBtn" title="Help &amp; Support">
+            <i class="bi bi-question-circle"></i>
+        </button>
+
+        <!-- User Profile Avatar with Top-Notch Dropdown Menu -->
+        <div class="kan-dropdown-wrap" id="kanUserWrap">
+            @php
+                $avatarPath = 'img/profile.jpg';
+                if (!empty(Auth::user()->avatar) && file_exists(public_path(Auth::user()->avatar))) {
+                    $avatarPath = Auth::user()->avatar;
                 }
-            });
+            @endphp
+            <div class="kan-user-avatar-wrap" id="profileDropdownBtn" title="Account Menu">
+                <img src="{{ asset($avatarPath) }}" 
+                     alt="{{ Auth::user()->name ?? 'User' }}" 
+                     class="kan-user-avatar" 
+                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Imran&background=2563EB&color=fff&size=64';">
+                <span class="kan-user-online-dot"></span>
+            </div>
+
+            <!-- User Account Popover Card -->
+            <div class="kan-popover-menu kan-user-menu" id="profileMenu">
+                <div class="kan-user-card-header">
+                    <img src="{{ asset($avatarPath) }}" 
+                         alt="{{ Auth::user()->name ?? 'User' }}" 
+                         class="kan-user-menu-avatar" 
+                         onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Imran&background=2563EB&color=fff&size=64';">
+                    <div class="kan-user-card-details">
+                        <span class="kan-user-card-name">{{ Auth::user()->name ?? 'Imran Khan' }}</span>
+                        <span class="kan-user-card-email">{{ Auth::user()->email ?? 'imran@kaninfos.com' }}</span>
+                        <span class="kan-user-card-badge"><i class="bi bi-shield-check"></i> Super Administrator</span>
+                    </div>
+                </div>
+
+                <div class="kan-popover-divider"></div>
+
+                <div class="kan-menu-list">
+                    @if(Route::has('company_info'))
+                    <a href="{{ route('company_info') }}" class="kan-menu-link">
+                        <i class="bi bi-building"></i> <span>Company Settings</span>
+                    </a>
+                    @else
+                    <a href="javascript:void(0)" class="kan-menu-link">
+                        <i class="bi bi-building"></i> <span>Company Settings</span>
+                    </a>
+                    @endif
+
+                    @if(Route::has('profile_view'))
+                    <a href="{{ route('profile_view') }}" class="kan-menu-link">
+                        <i class="bi bi-person-circle"></i> <span>My Profile</span>
+                    </a>
+                    @else
+                    <a href="javascript:void(0)" class="kan-menu-link">
+                        <i class="bi bi-person-circle"></i> <span>My Profile</span>
+                    </a>
+                    @endif
+
+                    @if(Route::has('change_password'))
+                    <a href="{{ route('change_password') }}" class="kan-menu-link">
+                        <i class="bi bi-shield-lock"></i> <span>Security &amp; Password</span>
+                    </a>
+                    @else
+                    <a href="javascript:void(0)" class="kan-menu-link">
+                        <i class="bi bi-shield-lock"></i> <span>Security &amp; Password</span>
+                    </a>
+                    @endif
+                </div>
+
+                <div class="kan-popover-divider"></div>
+
+                <a href="{{ route('logout') }}" 
+                   class="kan-menu-link kan-logout-link"
+                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="bi bi-box-arrow-right"></i> <span>Log Out</span>
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                    @csrf
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- INTERACTIVE HEADER CONTROLLER -->
+<script>
+(function() {
+    // 1. Spotlight Search Shortcut (Ctrl+K or Cmd+K)
+    window.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
+            e.preventDefault();
+            var searchInput = document.getElementById('kanSearchInput');
+            if (searchInput) {
+                searchInput.focus();
+                searchInput.select();
+            }
         }
+        if (e.key === 'Escape') {
+            closeAllHeaderPopovers();
+            var searchInput = document.getElementById('kanSearchInput');
+            if (searchInput) searchInput.blur();
+        }
+    });
 
-        $(document).on('change', '.select_showroom', function () {
-            let id = $(this).val();
-            $.ajax({
-                method: "POST",
-                url: "{{route('change.showroom')}}",
-                data: {
-                    id: id,
-                    _token: "{{csrf_token()}}",
-                },
-                success: function (result) {
-                    window.location.reload(true);
-                }
-            })
-        })
+    // 2. Popover Click Handlers
+    function setupPopover(btnId, menuId) {
+        var btn = document.getElementById(btnId);
+        var menu = document.getElementById(menuId);
+        if (!btn || !menu) return;
 
-        $(document).on('keyup', '.search_menu', function () {
-            let value = $(this).val();
-            let _token = "{{csrf_token()}}";
-            $.ajax({
-                method: "POST",
-                url: "{{route('menu.search')}}",
-                data: {
-                    value: value,
-                    _token: _token,
-                },
-                success: function (result) {
-                    $("#livesearch").show();
-                    $("#livesearch").html(result);
-                }
-            })
-        })
-
-        $(document).on('click', '.notification_icon', function(){
-            $('.notification_count_text').text('0').addClass('notification_count').removeClass('notification_count_pulse')
-            $('.notification_count_pulse').removeClass('pulse-ring');
-            $.ajax({
-                url: "{{route('mark_notifications')}}",
-                method: "get",
-                success: function (result) {
-                }
-            })
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var isOpen = menu.classList.contains('show');
+            closeAllHeaderPopovers();
+            if (!isOpen) {
+                menu.classList.add('show');
+            }
         });
+    }
 
-        function notification_remove(id, url) {
-            $.ajax({
-                url: "{{route('notification.update')}}",
-                method: "POST",
-                data: {
-                    id: id,
-                    _token: "{{csrf_token()}}",
-                },
-                success: function (result) {
-                }
-            })
+    setupPopover('companyDropdownBtn', 'companyDropdownMenu');
+    setupPopover('locationDropdownBtn', 'locationDropdownMenu');
+    setupPopover('notifBellBtn', 'notifMenu');
+    setupPopover('profileDropdownBtn', 'profileMenu');
+
+    function closeAllHeaderPopovers() {
+        document.querySelectorAll('.kan-popover-menu.show').forEach(function(el) {
+            el.classList.remove('show');
+        });
+    }
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.kan-popover-menu') && !e.target.closest('.kan-dropdown-wrap')) {
+            closeAllHeaderPopovers();
         }
-    </script>
-@endpush
+    });
+
+    // 3. Organization Switcher
+    document.querySelectorAll('.kan-org-item').forEach(function(item) {
+        item.addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.querySelectorAll('.kan-org-item').forEach(function(i) { i.classList.remove('active'); });
+            item.classList.add('active');
+            var name = item.querySelector('.kan-org-name').textContent;
+            var textElem = document.querySelector('#companyDropdownBtn .kan-pill-text');
+            if (textElem) textElem.textContent = name;
+            closeAllHeaderPopovers();
+        });
+    });
+
+    // 4. Location Switcher
+    document.querySelectorAll('.kan-loc-item').forEach(function(item) {
+        item.addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.querySelectorAll('.kan-loc-item').forEach(function(i) { i.classList.remove('active'); });
+            item.classList.add('active');
+            var name = item.querySelector('span').textContent.replace(' (Headquarters)', '');
+            var textElem = document.querySelector('#locationDropdownBtn .kan-pill-text');
+            if (textElem) textElem.textContent = name;
+            closeAllHeaderPopovers();
+        });
+    });
+})();
+</script>

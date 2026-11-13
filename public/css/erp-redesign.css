@@ -1,0 +1,2041 @@
+/* ============================================================
+   KAN ERP — COMPLETE REDESIGN (erp-redesign.css)
+   Exact Typography & Look from https://ats.kaninfos.com/
+   Full-width touching header, Zero-scroll sidebar with bottom collapse,
+   Interactive on-hover chart popup with crosshair, pixel-accurate cards.
+   Dynamic flex layout: Fills viewport 100% with NO bottom blank space and NO scroll.
+   ============================================================ */
+
+/* 1. TYPOGRAPHY & RESET — EXACT MATCH TO ats.kaninfos.com */
+:root {
+  --kan-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --sidebar-w: 220px;
+  --sidebar-collapsed-w: 64px;
+  --header-h: 48px;
+  --bg-main: #F8FAFC;
+  --card-border: #E2E8F0;
+  --card-border-hover: #CBD5E1;
+  --text-dark: #0F172A;
+  --text-muted: #64748B;
+  --text-light: #94A3B8;
+  --primary-blue: #2563EB;
+  --primary-blue-hover: #1D4ED8;
+}
+
+/* Force ats.kaninfos.com font across the application */
+body, 
+.admin, 
+#main-content, 
+.main-wrapper,
+.kan-sidebar,
+.kan-header,
+.kan-dashboard-container,
+h1, h2, h3, h4, h5, h6, 
+p, span, a, input, button, select, table, th, td, div {
+  font-family: var(--kan-font) !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Keep icon font families intact */
+i, [class^="bi-"], [class*=" bi-"], 
+[class^="ti-"], [class*=" ti-"], 
+[class^="fa-"], [class*=" fa-"] {
+  font-family: inherit;
+}
+
+/* Lighter font weights for headings */
+h1, h2, h3, h4, h5, h6,
+.kan-greeting-title,
+.kan-card-title {
+  font-weight: 500 !important;
+  letter-spacing: -0.015em !important;
+}
+
+/* Strict Zero-Scroll for page view */
+html, body.admin {
+  height: 100% !important;
+  max-height: 100vh !important;
+  overflow: hidden !important;
+  background: var(--bg-main) !important;
+  color: var(--text-dark) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 11.5px !important;
+  letter-spacing: -0.015em !important;
+}
+
+div.main-wrapper {
+  display: flex !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  background: var(--bg-main) !important;
+  position: relative !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Hide legacy clutter */
+.preloader,
+.footer-area {
+  display: none !important;
+}
+
+/* ============================================================
+   2. MAIN CONTENT & HEADER (ZERO GAP, PERFECT ALIGNMENT)
+   ============================================================ */
+#main-content,
+.main-wrapper #main-content,
+body.admin #main-content,
+div#main-content {
+  margin-left: var(--sidebar-w) !important;
+  margin-top: 0 !important;
+  margin-right: 0 !important;
+  margin-bottom: 0 !important;
+  padding: 0 !important;
+  width: calc(100% - var(--sidebar-w)) !important;
+  max-width: calc(100% - var(--sidebar-w)) !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  background: var(--bg-main) !important;
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  transition: margin-left 0.2s ease, width 0.2s ease, max-width 0.2s ease !important;
+}
+
+/* Header touches sidebar on left and browser edge on right */
+header.kan-header {
+  width: 100% !important;
+  height: var(--header-h) !important;
+  min-height: var(--header-h) !important;
+  max-height: var(--header-h) !important;
+  background: #FFFFFF !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: 1px solid var(--card-border) !important;
+  padding: 0 16px !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  position: relative !important;
+  z-index: 990 !important;
+  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
+}
+
+/* 1. Header Left: Breadcrumbs (Matching Reference Image) */
+.kan-header-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  flex-shrink: 0 !important;
+}
+
+.kan-breadcrumb-home {
+  color: var(--text-muted) !important;
+  font-size: 13px !important;
+  text-decoration: none !important;
+  display: flex !important;
+  align-items: center !important;
+  transition: color 0.12s ease !important;
+}
+
+.kan-breadcrumb-home:hover {
+  color: var(--primary-blue) !important;
+}
+
+.kan-breadcrumb-sep {
+  color: #CBD5E1 !important;
+  font-size: 9px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.kan-breadcrumb-item {
+  color: var(--text-muted) !important;
+  font-size: 11.5px !important;
+  font-weight: 400 !important;
+}
+
+.kan-breadcrumb-item.active {
+  color: var(--text-dark) !important;
+  font-weight: 500 !important;
+}
+
+/* 2. Header Center: Company, Location & Search */
+.kan-header-center {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.kan-dropdown-wrap {
+  position: relative !important;
+  display: inline-flex !important;
+}
+
+.kan-pill-dropdown {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  background: #FFFFFF !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 6px !important;
+  padding: 3px 8px !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  color: var(--text-dark) !important;
+  cursor: pointer !important;
+  height: 26px !important;
+  box-sizing: border-box !important;
+  transition: all 0.15s ease !important;
+  white-space: nowrap !important;
+}
+
+.kan-pill-dropdown:hover {
+  border-color: #CBD5E1 !important;
+  background: #F8FAFC !important;
+}
+
+.kan-pill-icon {
+  color: var(--text-muted) !important;
+  font-size: 10.5px !important;
+}
+
+.kan-pill-arrow {
+  color: #94A3B8 !important;
+  font-size: 8.5px !important;
+  margin-left: 2px !important;
+  transition: transform 0.15s ease !important;
+}
+
+.kan-dropdown-wrap:has(.kan-popover-menu.show) .kan-pill-arrow {
+  transform: rotate(180deg) !important;
+}
+
+/* Search Bar */
+.kan-header-search {
+  position: relative !important;
+  width: 195px !important;
+}
+
+.kan-search-icon {
+  position: absolute !important;
+  left: 8px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  color: var(--text-light) !important;
+  font-size: 10.5px !important;
+  pointer-events: none !important;
+}
+
+.kan-search-input {
+  width: 100% !important;
+  height: 26px !important;
+  background: #F8FAFC !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 6px !important;
+  padding: 2px 8px 2px 24px !important;
+  font-size: 11px !important;
+  color: var(--text-dark) !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+  transition: all 0.15s ease !important;
+}
+
+.kan-search-input:focus {
+  background: #FFFFFF !important;
+  border-color: var(--primary-blue) !important;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1) !important;
+}
+
+.kan-livesearch-box {
+  position: absolute !important;
+  top: calc(100% + 4px) !important;
+  left: 0 !important;
+  right: 0 !important;
+  background: #FFFFFF !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 6px !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08) !important;
+  max-height: 250px !important;
+  overflow-y: auto !important;
+  z-index: 1010 !important;
+}
+
+/* 3. Header Right: Notification, Help & User Avatar */
+.kan-header-right {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  flex-shrink: 0 !important;
+}
+
+.kan-icon-btn {
+  width: 26px !important;
+  height: 26px !important;
+  border-radius: 50% !important;
+  border: none !important;
+  background: transparent !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #475569 !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  position: relative !important;
+  padding: 0 !important;
+  transition: all 0.12s ease !important;
+}
+
+.kan-icon-btn:hover {
+  background: #F1F5F9 !important;
+  color: var(--text-dark) !important;
+}
+
+.kan-notif-badge {
+  position: absolute !important;
+  top: 1px !important;
+  right: 1px !important;
+  background: #EF4444 !important;
+  color: #FFFFFF !important;
+  font-size: 8px !important;
+  font-weight: 700 !important;
+  width: 12px !important;
+  height: 12px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1.5px solid #FFFFFF !important;
+  box-shadow: 0 1px 2px rgba(239, 68, 68, 0.3) !important;
+}
+
+.kan-notif-ping {
+  position: absolute !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  background: #EF4444 !important;
+  opacity: 0.75 !important;
+  animation: kanPing 2s cubic-bezier(0, 0, 0.2, 1) infinite !important;
+}
+
+@keyframes kanPing {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* User Avatar (Clean Circle Matching Reference Image) */
+.kan-user-avatar-wrap {
+  position: relative !important;
+  width: 26px !important;
+  height: 26px !important;
+  border-radius: 50% !important;
+  cursor: pointer !important;
+  display: inline-block !important;
+}
+
+.kan-user-avatar {
+  width: 26px !important;
+  height: 26px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  border: 1px solid #CBD5E1 !important;
+  display: block !important;
+  transition: border-color 0.15s ease !important;
+}
+
+.kan-user-avatar-wrap:hover .kan-user-avatar {
+  border-color: var(--primary-blue) !important;
+}
+
+.kan-user-online-dot {
+  position: absolute !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  width: 6.5px !important;
+  height: 6.5px !important;
+  border-radius: 50% !important;
+  background: #10B981 !important;
+  border: 1.5px solid #FFFFFF !important;
+}
+
+/* 4. Popover Menus (Clean & Polished) */
+.kan-popover-menu {
+  display: none;
+  position: absolute !important;
+  top: calc(100% + 6px) !important;
+  background: #FFFFFF !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1) !important;
+  padding: 4px 0 !important;
+  z-index: 1050 !important;
+  animation: kanPopoverFade 0.12s ease !important;
+}
+
+.kan-popover-menu.show {
+  display: block !important;
+}
+
+@keyframes kanPopoverFade {
+  from { opacity: 0; transform: translateY(-3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.kan-popover-header {
+  padding: 5px 12px 4px 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.kan-popover-title {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  color: var(--text-dark) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+.kan-popover-sub {
+  font-size: 8.5px !important;
+  color: #94A3B8 !important;
+}
+
+.kan-popover-divider {
+  height: 1px !important;
+  background: var(--card-border) !important;
+  margin: 3px 0 !important;
+}
+
+/* Organization Popover Menu */
+.kan-org-menu {
+  left: 0 !important;
+  width: 240px !important;
+}
+
+.kan-org-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 5px 12px !important;
+  cursor: pointer !important;
+  transition: background 0.12s ease !important;
+}
+
+.kan-org-item:hover, .kan-org-item.active {
+  background: #F8FAFC !important;
+}
+
+.kan-org-avatar {
+  width: 22px !important;
+  height: 22px !important;
+  border-radius: 5px !important;
+  background: #2563EB !important;
+  color: #FFFFFF !important;
+  font-size: 8.5px !important;
+  font-weight: 700 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+.kan-org-avatar.bg-indigo { background: #6366F1 !important; }
+.kan-org-avatar.bg-teal { background: #0D9488 !important; }
+
+.kan-org-details {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  line-height: 1.15 !important;
+}
+
+.kan-org-name {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: var(--text-dark) !important;
+}
+
+.kan-org-role {
+  font-size: 8.5px !important;
+  color: #64748B !important;
+}
+
+.kan-org-check {
+  color: var(--primary-blue) !important;
+  font-size: 13px !important;
+  margin-left: auto !important;
+}
+
+.kan-popover-footer-link {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  padding: 4px 12px 3px 12px !important;
+  font-size: 10px !important;
+  color: var(--primary-blue) !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+}
+
+.kan-popover-footer-link:hover {
+  text-decoration: underline !important;
+}
+
+/* Location Popover Menu */
+.kan-loc-menu {
+  left: 0 !important;
+  width: 190px !important;
+}
+
+.kan-loc-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  padding: 5px 12px !important;
+  font-size: 11px !important;
+  color: var(--text-dark) !important;
+  cursor: pointer !important;
+  transition: background 0.12s ease !important;
+}
+
+.kan-loc-item:hover, .kan-loc-item.active {
+  background: #F8FAFC !important;
+  color: var(--primary-blue) !important;
+}
+
+.kan-loc-item .kan-org-check {
+  margin-left: auto !important;
+}
+
+/* Notification Popover Menu */
+.kan-notif-menu {
+  right: 0 !important;
+  width: 275px !important;
+}
+
+.kan-notif-header {
+  padding: 6px 12px 4px 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.kan-notif-title {
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  color: var(--text-dark) !important;
+}
+
+.kan-notif-count-badge {
+  background: #FEE2E2 !important;
+  color: #DC2626 !important;
+  font-size: 8px !important;
+  font-weight: 700 !important;
+  padding: 1px 4.5px !important;
+  border-radius: 999px !important;
+  margin-left: 3px !important;
+}
+
+.kan-notif-mark-read {
+  font-size: 9.5px !important;
+  color: var(--primary-blue) !important;
+  text-decoration: none !important;
+}
+
+.kan-notif-list {
+  max-height: 200px !important;
+  overflow-y: auto !important;
+}
+
+.kan-notif-item {
+  display: flex !important;
+  gap: 7px !important;
+  padding: 6px 12px !important;
+  transition: background 0.12s ease !important;
+  border-bottom: 1px solid #F8FAFC !important;
+}
+
+.kan-notif-item:hover {
+  background: #F8FAFC !important;
+}
+
+.kan-notif-item.unread {
+  background: rgba(239, 246, 255, 0.45) !important;
+}
+
+.kan-notif-icon-box {
+  width: 22px !important;
+  height: 22px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 10px !important;
+  flex-shrink: 0 !important;
+  margin-top: 1px !important;
+}
+
+.kan-notif-icon-box.bg-red { background: #FEE2E2 !important; color: #EF4444 !important; }
+.kan-notif-icon-box.bg-blue { background: #DBEAFE !important; color: #2563EB !important; }
+.kan-notif-icon-box.bg-amber { background: #FEF3C7 !important; color: #F59E0B !important; }
+
+.kan-notif-content {
+  flex: 1 !important;
+}
+
+.kan-notif-msg {
+  font-size: 9.5px !important;
+  color: var(--text-dark) !important;
+  margin: 0 !important;
+  line-height: 1.25 !important;
+}
+
+.kan-notif-time {
+  font-size: 8px !important;
+  color: #94A3B8 !important;
+  margin-top: 2px !important;
+  display: inline-block !important;
+}
+
+.kan-notif-footer-link {
+  display: block !important;
+  text-align: center !important;
+  padding: 4px 12px 3px 12px !important;
+  font-size: 9.5px !important;
+  color: var(--primary-blue) !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+}
+
+/* User Profile Popover Menu */
+.kan-user-menu {
+  right: 0 !important;
+  width: 215px !important;
+}
+
+.kan-user-card-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 12px 6px 12px !important;
+}
+
+.kan-user-menu-avatar {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  border: 1.5px solid #CBD5E1 !important;
+  flex-shrink: 0 !important;
+}
+
+.kan-user-card-details {
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+.kan-user-card-name {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: var(--text-dark) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.kan-user-card-email {
+  font-size: 8.5px !important;
+  color: #64748B !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.kan-user-card-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+  font-size: 7.5px !important;
+  font-weight: 600 !important;
+  color: #2563EB !important;
+  margin-top: 2px !important;
+}
+
+.kan-menu-list {
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 2px 0 !important;
+}
+
+.kan-menu-link {
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  padding: 5px 12px !important;
+  font-size: 10.5px !important;
+  color: var(--text-dark) !important;
+  text-decoration: none !important;
+  transition: background 0.12s ease, color 0.12s ease !important;
+}
+
+.kan-menu-link i {
+  font-size: 11.5px !important;
+  color: #64748B !important;
+  transition: color 0.12s ease !important;
+}
+
+.kan-menu-link:hover {
+  background: #F8FAFC !important;
+  color: var(--primary-blue) !important;
+  text-decoration: none !important;
+}
+
+.kan-menu-link:hover i {
+  color: var(--primary-blue) !important;
+}
+
+.kan-logout-link {
+  color: #EF4444 !important;
+}
+
+.kan-logout-link i {
+  color: #EF4444 !important;
+}
+
+.kan-logout-link:hover {
+  background: #FEF2F2 !important;
+  color: #DC2626 !important;
+}
+
+.kan-logout-link:hover i {
+  color: #DC2626 !important;
+}
+
+/* ============================================================
+   3. SIDEBAR (ZERO SCROLL, COMPACT 220PX)
+   ============================================================ */
+nav#sidebar.kan-sidebar {
+  width: var(--sidebar-w) !important;
+  min-width: var(--sidebar-w) !important;
+  max-width: var(--sidebar-w) !important;
+  flex: 0 0 var(--sidebar-w) !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  background: linear-gradient(180deg, #090E23 0%, #0D1533 100%) !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  z-index: 1000 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.12) !important;
+  transition: width 0.2s ease, min-width 0.2s ease, max-width 0.2s ease !important;
+}
+
+/* Kill legacy styles */
+#sidebar.kan-sidebar,
+#sidebar.kan-sidebar *,
+#sidebar.kan-sidebar ul,
+#sidebar.kan-sidebar ul li,
+#sidebar.kan-sidebar ul li a,
+#sidebar.kan-sidebar ul li a:hover,
+#sidebar.kan-sidebar ul li a.active {
+  border-left: none !important;
+  border-right: none !important;
+  border-image: none !important;
+  border-image-source: none !important;
+  border-image-slice: 0 !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  outline: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+  transition: background 0.12s ease !important;
+}
+
+/* Sidebar Brand Header & Official Logo (Dead Center in Full View) */
+.kan-sidebar-header {
+  padding: 10px 10px 8px 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  flex-shrink: 0 !important;
+  text-align: center !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.kan-sidebar-brand {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  text-decoration: none !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+}
+
+.kan-brand-logo-img {
+  height: 24px !important;
+  width: auto !important;
+  max-width: 125px !important;
+  object-fit: contain !important;
+  display: block !important;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35)) !important;
+}
+
+.kan-brand-tag {
+  background: rgba(37, 99, 235, 0.25) !important;
+  border: 1px solid rgba(59, 130, 246, 0.35) !important;
+  color: #93C5FD !important;
+  font-size: 8px !important;
+  font-weight: 800 !important;
+  padding: 1px 5px !important;
+  border-radius: 4px !important;
+  letter-spacing: 0.8px !important;
+  text-transform: uppercase !important;
+}
+
+/* Quick Workspace Status Card */
+.kan-sidebar-ws-card {
+  margin: 2px 6px !important;
+  padding: 2.5px 7px !important;
+  background: rgba(255, 255, 255, 0.035) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  flex-shrink: 0 !important;
+}
+
+.kan-sidebar-ws-card:hover {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+.kan-ws-indicator {
+  position: relative !important;
+  width: 6px !important;
+  height: 6px !important;
+  flex-shrink: 0 !important;
+}
+
+.kan-ws-pulse {
+  display: block !important;
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  background: #10B981 !important;
+  box-shadow: 0 0 8px #10B981 !important;
+}
+
+.kan-ws-info {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  overflow: hidden !important;
+  line-height: 1.15 !important;
+}
+
+.kan-ws-name {
+  font-size: 9.5px !important;
+  font-weight: 600 !important;
+  color: #E2E8F0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.kan-ws-role {
+  font-size: 7.5px !important;
+  color: #64748B !important;
+  font-weight: 500 !important;
+}
+
+.kan-ws-chevron {
+  color: #64748B !important;
+  font-size: 8px !important;
+  margin-left: auto !important;
+}
+
+/* Sidebar Menu List & Group Suites (Compact & Fully Visible, No Overlapping) */
+.kan-sidebar-menu {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  padding: 2px 6px 6px 6px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.kan-sidebar-menu::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.kan-nav {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.kan-nav-group-label {
+  font-size: 7.5px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.8px !important;
+  color: #475569 !important;
+  padding: 2.5px 6px 1px 6px !important;
+  margin-top: 1px !important;
+  list-style: none !important;
+  user-select: none !important;
+}
+
+.kan-nav-item {
+  margin-bottom: 1px !important;
+}
+
+.kan-nav-link {
+  display: flex !important;
+  align-items: center !important;
+  padding: 2px 7px !important;
+  border-radius: 5px !important;
+  color: #94A3B8 !important;
+  text-decoration: none !important;
+  font-size: 10.5px !important;
+  font-weight: 500 !important;
+  gap: 6px !important;
+  height: 22px !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+  transition: all 0.12s ease !important;
+}
+
+.kan-nav-icon-wrap {
+  width: 15px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 11px !important;
+  color: inherit !important;
+  flex-shrink: 0 !important;
+}
+
+.kan-nav-text {
+  flex: 1 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  color: inherit !important;
+  font-size: 10.5px !important;
+  font-weight: 500 !important;
+}
+
+.kan-nav-arrow {
+  font-size: 7.5px !important;
+  color: #475569 !important;
+  margin-left: auto !important;
+  transition: transform 0.15s ease, color 0.15s ease !important;
+}
+
+.kan-nav-item:not(.active) .kan-nav-link:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #F8FAFC !important;
+  transform: translateX(2px) !important;
+}
+
+.kan-nav-item:not(.active) .kan-nav-link:hover .kan-nav-arrow {
+  color: #CBD5E1 !important;
+  transform: translateX(1px) !important;
+}
+
+.kan-nav-item.active .kan-nav-link {
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
+  color: #FFFFFF !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  transform: none !important;
+}
+
+.kan-nav-item.active .kan-nav-link .kan-nav-icon-wrap {
+  color: #FFFFFF !important;
+}
+
+.kan-active-indicator {
+  width: 4px !important;
+  height: 4px !important;
+  border-radius: 50% !important;
+  background: #FFFFFF !important;
+  box-shadow: 0 0 6px #FFFFFF !important;
+  margin-left: auto !important;
+}
+
+/* Nav Micro-Badges */
+.kan-nav-badge {
+  font-size: 7.5px !important;
+  font-weight: 700 !important;
+  padding: 0.5px 4.5px !important;
+  border-radius: 999px !important;
+  line-height: 1.2 !important;
+  margin-left: auto !important;
+}
+
+.kan-nav-badge.badge-red {
+  background: rgba(239, 68, 68, 0.22) !important;
+  color: #F87171 !important;
+  border: 1px solid rgba(239, 68, 68, 0.35) !important;
+}
+
+.kan-nav-badge.badge-blue {
+  background: rgba(59, 130, 246, 0.22) !important;
+  color: #60A5FA !important;
+  border: 1px solid rgba(59, 130, 246, 0.35) !important;
+}
+
+.kan-nav-badge.badge-amber {
+  background: rgba(245, 158, 11, 0.22) !important;
+  color: #FBBF24 !important;
+  border: 1px solid rgba(245, 158, 11, 0.35) !important;
+}
+
+.kan-sidebar-bottom {
+  flex-shrink: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: #0A0F29 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.2) !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+.kan-upgrade-card {
+  margin: 3px 6px 2px 6px !important;
+  padding: 4px 6px !important;
+  background: rgba(30, 41, 59, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 6px !important;
+  text-align: center !important;
+  flex-shrink: 0 !important;
+}
+
+.kan-upgrade-crown {
+  font-size: 10px !important;
+  line-height: 1 !important;
+}
+
+.kan-upgrade-title {
+  color: #FFFFFF !important;
+  font-size: 8.5px !important;
+  font-weight: 600 !important;
+  line-height: 1.15 !important;
+  margin: 1px 0 !important;
+}
+
+.kan-upgrade-desc {
+  color: #94A3B8 !important;
+  font-size: 7px !important;
+  line-height: 1.15 !important;
+  margin-bottom: 3px !important;
+}
+
+.kan-upgrade-btn {
+  display: block !important;
+  background: var(--primary-blue) !important;
+  color: #FFFFFF !important;
+  font-size: 8px !important;
+  font-weight: 600 !important;
+  padding: 2px 5px !important;
+  border-radius: 4px !important;
+  text-decoration: none !important;
+  transition: background 0.15s ease !important;
+}
+
+.kan-upgrade-btn:hover {
+  background: var(--primary-blue-hover) !important;
+  color: #FFFFFF !important;
+  text-decoration: none !important;
+}
+
+.kan-collapse-trigger {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 4px 10px !important;
+  color: #94A3B8 !important;
+  font-size: 9.5px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+  transition: background 0.15s ease, color 0.15s ease !important;
+  user-select: none !important;
+}
+
+.kan-collapse-trigger:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #FFFFFF !important;
+}
+
+.kan-collapse-icon {
+  font-size: 11px !important;
+  color: #64748B !important;
+  transition: transform 0.2s ease, color 0.15s ease !important;
+}
+
+.kan-collapse-trigger:hover .kan-collapse-icon {
+  color: #FFFFFF !important;
+}
+
+/* Collapsed Mini Sidebar */
+body.sidebar-collapsed #sidebar.kan-sidebar {
+  width: var(--sidebar-collapsed-w) !important;
+  min-width: var(--sidebar-collapsed-w) !important;
+  max-width: var(--sidebar-collapsed-w) !important;
+  flex: 0 0 var(--sidebar-collapsed-w) !important;
+}
+
+body.sidebar-collapsed #main-content {
+  margin-left: var(--sidebar-collapsed-w) !important;
+  width: calc(100% - var(--sidebar-collapsed-w)) !important;
+  max-width: calc(100% - var(--sidebar-collapsed-w)) !important;
+}
+
+body.sidebar-collapsed .kan-brand-tag,
+body.sidebar-collapsed .kan-brand-title,
+body.sidebar-collapsed .kan-sidebar-ws-card,
+body.sidebar-collapsed .kan-nav-group-label,
+body.sidebar-collapsed .kan-nav-text,
+body.sidebar-collapsed .kan-nav-arrow,
+body.sidebar-collapsed .kan-nav-badge,
+body.sidebar-collapsed .kan-active-indicator,
+body.sidebar-collapsed .kan-upgrade-card,
+body.sidebar-collapsed .kan-collapse-label {
+  display: none !important;
+}
+
+body.sidebar-collapsed .kan-brand-logo-img {
+  width: 48px !important;
+  max-width: 48px !important;
+  height: auto !important;
+  max-height: 23px !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  display: block !important;
+  margin: 0 auto !important;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35)) !important;
+}
+
+body.sidebar-collapsed .kan-sidebar-header {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 9px 4px !important;
+  text-align: center !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+body.sidebar-collapsed .kan-sidebar-brand {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin: 0 auto !important;
+  width: 100% !important;
+  text-align: center !important;
+}
+
+body.sidebar-collapsed .kan-nav-link {
+  justify-content: center !important;
+  padding: 4px 0 !important;
+}
+
+body.sidebar-collapsed .kan-nav-icon,
+body.sidebar-collapsed .kan-nav-icon-wrap {
+  margin: 0 auto !important;
+  font-size: 13.5px !important;
+}
+
+body.sidebar-collapsed .kan-collapse-trigger {
+  justify-content: center !important;
+  padding: 6px 0 !important;
+}
+
+body.sidebar-collapsed .kan-collapse-icon {
+  transform: rotate(180deg) !important;
+}
+
+/* ============================================================
+   4. DASHBOARD CONTAINER (EXACT MATCH TO REFERENCE DESIGN)
+   ============================================================ */
+.kan-dashboard-container {
+  min-height: calc(100vh - var(--header-h)) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 8px 16px 28px 16px !important;
+  gap: 8px !important;
+  background: var(--bg-main) !important;
+  box-sizing: border-box !important;
+}
+
+/* Top bar (Greeting + Filter actions) */
+.kan-top-bar {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+  flex-shrink: 0 !important;
+}
+
+.kan-greeting-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  flex-shrink: 0 !important;
+}
+
+.kan-greeting-title {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: var(--text-dark) !important;
+  margin: 0 !important;
+  line-height: 1.15 !important;
+}
+
+.kan-greeting-sub {
+  font-size: 11px !important;
+  color: var(--text-muted) !important;
+  margin: 1px 0 0 0 !important;
+}
+
+.kan-quick-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.kan-btn-primary {
+  background: var(--primary-blue) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 4px 12px !important;
+  font-size: 11.5px !important;
+  font-weight: 500 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  cursor: pointer !important;
+  height: 30px !important;
+  box-shadow: 0 1px 2px rgba(37, 99, 235, 0.25) !important;
+  transition: background 0.15s ease !important;
+}
+
+.kan-btn-primary:hover {
+  background: var(--primary-blue-hover) !important;
+}
+
+.kan-btn-arrow {
+  font-size: 9px !important;
+  margin-left: 2px !important;
+}
+
+.kan-btn-outline {
+  background: #FFFFFF !important;
+  color: var(--text-dark) !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 6px !important;
+  padding: 4px 10px !important;
+  font-size: 11.5px !important;
+  font-weight: 500 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  cursor: pointer !important;
+  height: 30px !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+  transition: all 0.15s ease !important;
+}
+
+.kan-btn-outline:hover {
+  background: #F8FAFC !important;
+  border-color: var(--card-border-hover) !important;
+}
+
+.kan-filter-row {
+  display: flex !important;
+  justify-content: flex-end !important;
+  flex-shrink: 0 !important;
+}
+
+.kan-filter-group {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.kan-filter-btn {
+  background: #FFFFFF !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 6px !important;
+  padding: 2px 8px !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  color: #334155 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  cursor: pointer !important;
+  height: 24px !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+  transition: all 0.15s ease !important;
+}
+
+.kan-filter-btn:hover {
+  background: #F8FAFC !important;
+  border-color: var(--card-border-hover) !important;
+}
+
+/* ============================================================
+   5 KPI CARDS GRID (HEIGHT 82PX, FULLY VISIBLE WAVES & ICONS)
+   ============================================================ */
+.kan-kpi-grid {
+  display: grid !important;
+  grid-template-columns: repeat(5, 1fr) !important;
+  gap: 10px !important;
+  flex-shrink: 0 !important;
+  height: 84px !important;
+  min-height: 84px !important;
+}
+
+.kan-kpi-card {
+  background: #FFFFFF !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 9px !important;
+  padding: 8px 12px 0 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  height: 84px !important;
+  min-height: 84px !important;
+  position: relative !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.kan-kpi-card:hover {
+  border-color: var(--card-border-hover) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05) !important;
+}
+
+.kan-kpi-body {
+  position: relative !important;
+  z-index: 2 !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+}
+
+.kan-kpi-icon-wrap {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #FFFFFF !important;
+  font-size: 13px !important;
+  flex-shrink: 0 !important;
+}
+
+.kan-kpi-icon-wrap.bg-blue   { background: #2563EB !important; }
+.kan-kpi-icon-wrap.bg-green  { background: #10B981 !important; }
+.kan-kpi-icon-wrap.bg-purple { background: #8B5CF6 !important; }
+.kan-kpi-icon-wrap.bg-teal   { background: #0D9488 !important; }
+.kan-kpi-icon-wrap.bg-orange { background: #F97316 !important; }
+
+.kan-kpi-details {
+  flex: 1 !important;
+}
+
+.kan-kpi-label {
+  font-size: 11px !important;
+  color: var(--text-muted) !important;
+  font-weight: 500 !important;
+  display: block !important;
+  line-height: 1.15 !important;
+}
+
+.kan-kpi-value {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: var(--text-dark) !important;
+  margin: 1px 0 !important;
+  line-height: 1.1 !important;
+}
+
+.kan-kpi-trend {
+  font-size: 9.5px !important;
+  font-weight: 600 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 1px !important;
+}
+
+.kan-trend-triangle {
+  font-size: 6.5px !important;
+  margin-right: 2px !important;
+  vertical-align: middle !important;
+}
+
+.text-green { color: #16A34A !important; }
+.text-red   { color: #DC2626 !important; }
+.text-warning { color: #F59E0B !important; }
+
+.kan-sparkline {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 38px !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.kan-sparkline svg {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+}
+
+/* ============================================================
+   5. MIDDLE ROW: REVENUE VS EXPENSES & ACTION REQUIRED
+   ============================================================ */
+.kan-middle-grid {
+  display: grid !important;
+  grid-template-columns: 1.75fr 1.15fr !important;
+  gap: 8px !important;
+  height: 175px !important;
+  min-height: 175px !important;
+  box-sizing: border-box !important;
+}
+
+.kan-card {
+  background: #FFFFFF !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  overflow: hidden !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.kan-card:hover {
+  border-color: var(--card-border-hover) !important;
+}
+
+.kan-card-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 4px !important;
+  flex-shrink: 0 !important;
+}
+
+.kan-card-title-wrap {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.kan-card-icon-blue {
+  color: var(--primary-blue) !important;
+  font-size: 14px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+}
+
+.kan-card-icon-blue svg {
+  display: block !important;
+  flex-shrink: 0 !important;
+}
+
+.kan-card-title {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--text-dark) !important;
+  margin: 0 !important;
+}
+
+.kan-card-link {
+  color: var(--primary-blue) !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+}
+
+.kan-card-link:hover {
+  text-decoration: underline !important;
+}
+
+/* Revenue vs Expenses Chart Card */
+.kan-chart-card {
+  height: 100% !important;
+}
+
+.kan-chart-legend {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  font-size: 10px !important;
+  color: var(--text-muted) !important;
+}
+
+.kan-legend-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.kan-dot {
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 50% !important;
+  display: inline-block !important;
+}
+
+.bg-blue-dot   { background: #2563EB !important; }
+.bg-orange-dot { background: #F97316 !important; }
+.bg-green-dot  { background: #10B981 !important; }
+.bg-purple-dot { background: #8B5CF6 !important; }
+
+.kan-chart-body {
+  position: relative !important;
+  width: 100% !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+}
+
+.kan-chart-svg-wrap {
+  position: relative !important;
+  width: 100% !important;
+  height: 130px !important;
+  min-height: 130px !important;
+  cursor: crosshair !important;
+}
+
+.kan-line-chart {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+}
+
+/* Dynamic Tooltip Popup */
+.kan-chart-tooltip {
+  position: absolute !important;
+  top: 8px !important;
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 8px !important;
+  padding: 6px 12px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
+  font-size: 10.5px !important;
+  z-index: 1000 !important;
+  pointer-events: none !important;
+  white-space: nowrap !important;
+  transition: opacity 0.15s ease !important;
+}
+
+.kan-tt-date {
+  color: var(--text-muted) !important;
+  font-weight: 500 !important;
+  margin-bottom: 2px !important;
+  font-size: 9.5px !important;
+}
+
+.kan-tt-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  color: var(--text-dark) !important;
+  line-height: 1.35 !important;
+}
+
+.kan-tt-row strong {
+  font-weight: 600 !important;
+}
+
+/* Action Required Panel (Dual Icon + Badge + Clean View Button) */
+.kan-action-card {
+  height: 100% !important;
+}
+
+.kan-action-bolt {
+  color: #F59E0B !important;
+  font-size: 13.5px !important;
+}
+
+.kan-action-list {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-around !important;
+  gap: 3px !important;
+  flex: 1 1 auto !important;
+}
+
+.kan-action-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  padding: 1px 0 !important;
+}
+
+.kan-action-left-group {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex-shrink: 0 !important;
+}
+
+.kan-action-icon-circle {
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 11px !important;
+  flex-shrink: 0 !important;
+}
+
+.bg-red-soft    { background: #FEE2E2 !important; }
+.bg-blue-soft   { background: #DBEAFE !important; }
+.bg-yellow-soft { background: #FEF3C7 !important; }
+.bg-green-soft  { background: #D1FAE5 !important; }
+
+.text-blue   { color: #2563EB !important; }
+.text-yellow { color: #D97706 !important; }
+
+.kan-action-num-badge {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  padding: 1px 5px !important;
+  border-radius: 5px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 18px !important;
+  height: 18px !important;
+  box-sizing: border-box !important;
+}
+
+.kan-action-text {
+  flex: 1 !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  color: var(--text-dark) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Beautiful, Prominent "View" Button matching reference */
+.kan-action-btn {
+  background: #FFFFFF !important;
+  border: 1px solid #CBD5E1 !important;
+  border-radius: 6px !important;
+  padding: 1px 11px !important;
+  font-size: 10.5px !important;
+  font-weight: 500 !important;
+  color: #2563EB !important;
+  cursor: pointer !important;
+  height: 22px !important;
+  line-height: 20px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+  transition: all 0.15s ease !important;
+  flex-shrink: 0 !important;
+}
+
+.kan-action-btn:hover {
+  background: #F8FAFC !important;
+  border-color: #2563EB !important;
+  color: #1D4ED8 !important;
+  box-shadow: 0 1px 4px rgba(37, 99, 235, 0.15) !important;
+}
+
+/* ============================================================
+   6. BOTTOM ROW: 3 CARDS (EXACT MATCH: LARGE DONUT, BALANCED INVENTORY, SPACIOUS ROWS)
+   ============================================================ */
+.kan-bottom-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1.6fr !important;
+  gap: 8px !important;
+  height: 165px !important;
+  min-height: 165px !important;
+  margin-bottom: 24px !important;
+  box-sizing: border-box !important;
+}
+
+.kan-pill-btn {
+  background: #F1F5F9 !important;
+  border: 1px solid transparent !important;
+  border-radius: 6px !important;
+  padding: 3px 9px !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  color: #475569 !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  height: 24px !important;
+  line-height: 1 !important;
+  box-shadow: none !important;
+  transition: all 0.15s ease !important;
+}
+
+.kan-pill-btn:hover {
+  background: #E2E8F0 !important;
+  color: #0F172A !important;
+}
+
+.kan-pill-arrow {
+  font-size: 9px !important;
+  color: #64748B !important;
+}
+
+.kan-sales-card,
+.kan-inventory-card,
+.kan-transactions-card {
+  height: 100% !important;
+}
+
+/* Card 1: Sales Performance (Exact Large Donut) */
+.kan-sales-body {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 1 1 auto !important;
+  gap: 16px !important;
+  padding: 2px 0 !important;
+}
+
+.kan-donut-container {
+  position: relative !important;
+  width: 95px !important;
+  height: 95px !important;
+  flex-shrink: 0 !important;
+}
+
+.kan-donut-svg {
+  width: 100% !important;
+  height: 100% !important;
+  transform: rotate(-90deg) !important;
+}
+
+.donut-segment {
+  transition: stroke-width 0.2s ease !important;
+  cursor: pointer !important;
+}
+
+.donut-segment:hover {
+  filter: none !important;
+}
+
+.kan-donut-center {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  text-align: center !important;
+  pointer-events: none !important;
+}
+
+.kan-donut-amount {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: var(--text-dark) !important;
+  display: block !important;
+  line-height: 1.1 !important;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.kan-donut-sub {
+  font-size: 8.5px !important;
+  color: var(--text-muted) !important;
+  display: block !important;
+  line-height: 1.1 !important;
+  margin-top: 1px !important;
+}
+
+.kan-donut-legend {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 5px !important;
+  flex: 1 !important;
+  max-width: 120px !important;
+}
+
+.kan-donut-legend-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  font-size: 10.5px !important;
+  cursor: pointer !important;
+  padding: 1.5px 4px !important;
+  border-radius: 4px !important;
+  transition: background 0.15s ease !important;
+}
+
+.kan-donut-legend-row:hover {
+  background: #F1F5F9 !important;
+}
+
+.kan-legend-label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  color: var(--text-dark) !important;
+}
+
+.kan-legend-val {
+  font-weight: 600 !important;
+  color: var(--text-dark) !important;
+}
+
+/* Card 2: Inventory Snapshot (Exact Match & Balanced Tight Spacing) */
+.kan-inv-title-icon {
+  margin-right: 4px !important;
+  display: inline-flex !important;
+  vertical-align: middle !important;
+}
+
+.kan-inventory-body {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  flex: 1 1 auto !important;
+  padding: 1px 0 0 0 !important;
+  gap: 2px !important;
+}
+
+.kan-inventory-stats {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.kan-inv-stat {
+  flex: 1 1 50% !important;
+  width: 50% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.kan-inv-stat:first-child {
+  padding-right: 12px !important;
+}
+
+.kan-inv-stat:last-child {
+  padding-left: 20px !important;
+}
+
+.kan-inv-divider {
+  width: 1px !important;
+  min-width: 1px !important;
+  height: 28px !important;
+  background: #E2E8F0 !important;
+  margin: 0 !important;
+  flex-shrink: 0 !important;
+  display: block !important;
+}
+
+.kan-inv-divider-h {
+  width: 100% !important;
+  height: 1px !important;
+  background: #F1F5F9 !important;
+  margin: 3px 0 !important;
+  flex-shrink: 0 !important;
+}
+
+.kan-inv-val {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: var(--text-dark) !important;
+  line-height: 1.1 !important;
+}
+
+.kan-inv-val.text-amber {
+  color: #F59E0B !important;
+}
+
+.kan-inv-label {
+  font-size: 10px !important;
+  color: var(--text-muted) !important;
+  margin-top: 1px !important;
+}
+
+.kan-inventory-bottom {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 6px !important;
+  padding: 0 !important;
+}
+
+.kan-gauge-group {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.kan-gauge-wrap {
+  position: relative !important;
+  width: 44px !important;
+  height: 44px !important;
+  flex-shrink: 0 !important;
+}
+
+.kan-gauge-svg {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.kan-gauge-text {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  color: var(--text-dark) !important;
+}
+
+.kan-gauge-desc {
+  display: flex !important;
+  flex-direction: column !important;
+  line-height: 1.15 !important;
+}
+
+.kan-gauge-desc strong {
+  font-weight: 600 !important;
+  font-size: 11px !important;
+  color: var(--text-dark) !important;
+}
+
+.kan-gauge-desc span {
+  color: var(--text-muted) !important;
+  font-size: 9px !important;
+}
+
+.kan-warehouse-card {
+  background: #EFF6FF !important;
+  border-radius: 10px !important;
+  padding: 2px 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+/* Card 3: Recent Transactions (Spacious, Uncongested Rows) */
+.nowrap-col {
+  white-space: nowrap !important;
+}
+
+.kan-table-responsive {
+  flex: 1 1 auto !important;
+  overflow: hidden !important;
+  padding-bottom: 2px !important;
+}
+
+.kan-table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  font-size: 10.5px !important;
+}
+
+.kan-table th {
+  color: #64748B !important;
+  font-weight: 500 !important;
+  font-size: 10px !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  padding: 3.5px 7px !important;
+  border-bottom: 1px solid #F1F5F9 !important;
+  text-align: left !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+}
+
+.kan-table td {
+  padding: 4px 7px !important;
+  color: var(--text-dark) !important;
+  border-bottom: 1px solid #F8FAFC !important;
+  vertical-align: middle !important;
+  white-space: nowrap !important;
+  font-size: 10.5px !important;
+  line-height: 1.2 !important;
+}
+
+.kan-table tr:last-child td {
+  border-bottom: none !important;
+}
+
+.font-medium { font-weight: 500 !important; }
+.font-semibold { font-weight: 600 !important; }
+.text-dark { color: #0F172A !important; }
+
+.kan-status-pill {
+  display: inline-block !important;
+  padding: 2px 7px !important;
+  border-radius: 10px !important;
+  font-size: 9.5px !important;
+  font-weight: 600 !important;
+}
+
+.status-paid    { background: #DCFCE7 !important; color: #16A34A !important; }
+.status-pending { background: #FEF3C7 !important; color: #D97706 !important; }
+.status-overdue { background: #FEE2E2 !important; color: #DC2626 !important; }
