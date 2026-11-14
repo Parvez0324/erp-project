@@ -3,7 +3,7 @@
     <!-- Brand / Official KAN Logo from ats.kaninfos.com -->
     <div class="kan-sidebar-header">
         <a href="{{ route('home') }}" class="kan-sidebar-brand" title="KAN ERP">
-            <img src="{{ asset('images/kan-logo-white.png') }}" alt="KAN ERP" class="kan-brand-logo-img">
+            <img src="{{ asset('public/images/kan-logo-white.png') }}" onerror="this.onerror=null; this.src='https://ats.kaninfos.com/images/logo-white.png';" alt="KAN ERP" class="kan-brand-logo-img">
             <span class="kan-brand-tag">ERP</span>
         </a>
     </div>
